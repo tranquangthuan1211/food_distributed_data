@@ -30,9 +30,11 @@ const tabs = [
 function OrdersPage() {
   const [tab, setTab] = useState("active");
   const filtered = orders.filter((o) =>
-    tab === "active" ? !["completed", "cancelled"].includes(o.status)
-      : tab === "completed" ? o.status === "completed"
-      : o.status === "cancelled"
+    tab === "active"
+      ? !["completed", "cancelled"].includes(o.status)
+      : tab === "completed"
+        ? o.status === "completed"
+        : o.status === "cancelled",
   );
 
   return (
@@ -50,7 +52,9 @@ function OrdersPage() {
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`flex-1 rounded-full px-4 py-2 text-sm font-medium transition-smooth ${
-                tab === t.id ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
+                tab === t.id
+                  ? "bg-background text-foreground shadow-soft"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {t.label}
@@ -69,23 +73,34 @@ function OrdersPage() {
               return (
                 <Link key={o.id} to="/orders/$id" params={{ id: o.id }}>
                   <Card className="flex items-center gap-4 rounded-2xl border-0 p-4 shadow-card transition-smooth hover:-translate-y-0.5">
-                    <img src={o.cover} alt={o.restaurantName} loading="lazy" className="h-20 w-20 shrink-0 rounded-xl object-cover" />
+                    <img
+                      src={o.cover}
+                      alt={o.restaurantName}
+                      loading="lazy"
+                      className="h-20 w-20 shrink-0 rounded-xl object-cover"
+                    />
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <h3 className="font-semibold">{o.restaurantName}</h3>
-                        <Badge className={`rounded-full ${s.cls}`} variant="secondary">{s.label}</Badge>
+                        <Badge className={`rounded-full ${s.cls}`} variant="secondary">
+                          {s.label}
+                        </Badge>
                       </div>
                       <p className="mt-1 text-sm text-muted-foreground line-clamp-1">
                         {o.items.map((i) => `${i.qty}× ${i.name}`).join(" · ")}
                       </p>
                       <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {o.placedAt}</span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3.5 w-3.5" /> {o.placedAt}
+                        </span>
                         <span>Mã: {o.id}</span>
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-bold text-primary">{formatVND(o.total)}</div>
-                      <Button variant="ghost" size="sm" className="mt-1">Chi tiết <ChevronRight className="ml-1 h-3 w-3" /></Button>
+                      <Button variant="ghost" size="sm" className="mt-1">
+                        Chi tiết <ChevronRight className="ml-1 h-3 w-3" />
+                      </Button>
                     </div>
                   </Card>
                 </Link>

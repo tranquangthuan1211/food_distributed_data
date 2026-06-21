@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {Category} from "@/types/categories";
 import {Dish} from "@/types/dishes";
 import { Link } from "@tanstack/react-router";
@@ -14,6 +15,19 @@ export function Menu({
     categories: Category[];
     dishes: Dish[];
 }) {
+    const [stateCategory, setStateCategory] = useState<Category>(categories[0]);
+    const [stateDishes, setDishes] = useState<Dish[]>(dishes);
+    const handleClickCategory = (category: Category) => {
+        setStateCategory(category);
+        if (category.name === "Tất cả") {
+            setDishes(dishes);
+        } else {
+            const filteredDishes = dishes.filter(
+                (dish) => dish.category === category.name
+            );
+            setDishes(filteredDishes);
+        }
+    };
     return (
         <>
            {/* Categories */}
@@ -21,9 +35,10 @@ export function Menu({
                 <div className="flex gap-3 overflow-x-auto pb-2">
                 {categories.map((c, i) => (
                     <button
+                    onClick={() => handleClickCategory(c)}
                     key={c.name}
                     className={`flex shrink-0 items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium transition-smooth ${
-                        i === 0
+                        stateCategory.name === c.name
                         ? "border-primary bg-primary text-primary-foreground shadow-soft"
                         : "border-border bg-card hover:border-primary hover:text-primary"
                     }`}
@@ -49,7 +64,7 @@ export function Menu({
                 </div>
 
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {dishes.slice(0, 4).map((d) => (
+                {stateDishes.map((d) => (
                     <Card
                     key={d.id}
                     className="group overflow-hidden rounded-2xl border-0 p-0 shadow-card transition-smooth hover:-translate-y-1"
