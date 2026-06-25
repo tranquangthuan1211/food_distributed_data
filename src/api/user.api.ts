@@ -1,22 +1,50 @@
-import { apiGet, apiPost } from "./api.request";
-import { UserDetail, User } from "../types/users/index";
-import {SignInRequest,SignInResponse, SignUpRequest,SignUpResponse} from "../types/users/index";
+import { apiPost } from "./api.request";
 
+/**
+ * User-facing API helpers (login / register).
+ *
+ * BE chỉ expose 2 endpoint cho user:
+ *   - POST /api/users/register
+ *   - POST /api/users/login
+ *
+ * Lưu ý: BE không có /api/users (GET all) hay /api/users/info.
+ * Nếu sau này cần thêm endpoint, sửa ở đây và ở BE (controllers/userController.js).
+ */
+
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+}
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: AuthUser;
+}
 
 class UserApi {
-    async getUsers(request: FormData): Promise<UserDetail[]> {
-        const response = await apiGet("/users");
-        return response;
-      }
-    async signIn(request: SignInRequest): SignInResponse {
-        return await apiPost("/users/login", request);
-      }
-    async signUp(request: SignUpRequest): Promise<{error:number,message:string, data:any}> {
-        return await apiPost("/users", request);
-      }
-    async me(): Promise<{data:User}> {
-        return await apiGet("/users/info");
-    }
+  /** Đăng nhập — trả về { success, data: { token, user } } */
+  async signIn(payload: LoginPayload): Promise<{ success: boolean; data: AuthResponse; message?: string }> {
+    return await apiPost("/users/login", payload);
+  }
+
+  /** Đăng ký — BE trả về { success, data: user } (KHÔNG có token, cần login lại) */
+  async signUp(payload: RegisterPayload): Promise<{ success: boolean; data: AuthUser; message?: string }> {
+    return await apiPost("/users/register", payload);
+  }
 }
 
 export default new UserApi();

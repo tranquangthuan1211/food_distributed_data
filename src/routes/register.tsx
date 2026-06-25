@@ -1,10 +1,21 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, User, Phone, Eye, EyeOff, UtensilsCrossed, ArrowLeft } from "lucide-react";
+import {
+  Mail,
+  Lock,
+  User,
+  Phone,
+  Eye,
+  EyeOff,
+  UtensilsCrossed,
+  ArrowLeft,
+  Loader2,
+} from "lucide-react";
 import heroImg from "@/assets/hero-food.jpg";
+import { useAuth } from "@/context/AuthContext";
 
 export const Route = createFileRoute("/register")({
   head: () => ({ meta: [{ title: "Đăng ký — Bếp Nhà" }] }),
@@ -12,7 +23,36 @@ export const Route = createFileRoute("/register")({
 });
 
 function RegisterPage() {
+  const navigate = useNavigate();
+  const { register, login, loading, error } = useAuth();
+
   const [show, setShow] = useState(false);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [agree, setAgree] = useState(false);
+  const [success, setSuccess] = useState("");
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setSuccess("");
+    if (!agree) return;
+    if (password.length < 6) {
+      // validate tối thiểu phía client; BE sẽ validate tiếp
+      return;
+    }
+    try {
+      await register({ name, email, password, phone });
+      // BE register không trả token → tự login luôn cho UX mượt
+      await login({ email, password });
+      setSuccess("Đăng ký thành công! Đang chuyển về trang chủ...");
+      navigate({ to: "/" });
+    } catch {
+      // error đã được set vào AuthContext
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background lg:grid lg:grid-cols-2">
       <div className="relative hidden overflow-hidden lg:block">
@@ -46,12 +86,18 @@ function RegisterPage() {
             <p className="text-muted-foreground">Chỉ mất 30 giây để bắt đầu đặt món.</p>
           </div>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label>Họ và tên</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input placeholder="Nguyễn Văn A" className="h-12 pl-10 rounded-xl" />
+                <Input
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Nguyễn Văn A"
+                  className="h-12 pl-10 rounded-xl"
+                />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -59,14 +105,26 @@ function RegisterPage() {
                 <Label>Số điện thoại</Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input placeholder="09xx xxx xxx" className="h-12 pl-10 rounded-xl" />
+                  <Input
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="09xx xxx xxx"
+                    className="h-12 pl-10 rounded-xl"
+                  />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label>Email</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input placeholder="ban@email.com" className="h-12 pl-10 rounded-xl" />
+                  <Input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="ban@email.com"
+                    className="h-12 pl-10 rounded-xl"
+                  />
                 </div>
               </div>
             </div>
@@ -74,18 +132,57 @@ function RegisterPage() {
               <Label>Mật khẩu</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input type={show ? "text" : "password"} placeholder="Tối thiểu 8 ký tự" className="h-12 pl-10 pr-10 rounded-xl" />
-                <button type="button" onClick={() => setShow((s) => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <Input
+                  type={show ? "text" : "password"}
+                  required
+                  minLength={6}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Tối thiểu 6 ký tự"
+                  className="h-12 pl-10 pr-10 rounded-xl"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShow((s) => !s)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                >
                   {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
+
+            {error && (
+              <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700">
+                {success}
+              </div>
+            )}
+
             <label className="flex items-start gap-2 text-sm text-muted-foreground">
-              <input type="checkbox" className="mt-1 h-4 w-4 rounded border-border text-primary" />
+              <input
+                type="checkbox"
+                checked={agree}
+                onChange={(e) => setAgree(e.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-border text-primary"
+              />
               Tôi đồng ý với <span className="text-primary">Điều khoản sử dụng</span> & <span className="text-primary">Chính sách bảo mật</span>
             </label>
-            <Button type="submit" className="h-12 w-full rounded-xl bg-gradient-to-r from-primary to-primary-glow text-base font-semibold shadow-soft">
-              Tạo tài khoản
+            <Button
+              type="submit"
+              disabled={loading || !agree}
+              className="h-12 w-full rounded-xl bg-gradient-to-r from-primary to-primary-glow text-base font-semibold shadow-soft disabled:opacity-60"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Đang tạo tài khoản...
+                </>
+              ) : (
+                "Tạo tài khoản"
+              )}
             </Button>
           </form>
 

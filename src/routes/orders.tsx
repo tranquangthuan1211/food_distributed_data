@@ -1,11 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, MapPin, ChevronRight } from "lucide-react";
-import { orders, formatVND, type OrderStatus } from "@/lib/mock-data";
+import { Clock, ChevronRight, Loader2, AlertCircle } from "lucide-react";
+import { orders as mockOrders, formatVND, type OrderStatus } from "@/lib/mock-data";
+import { useAuth } from "@/context/AuthContext";
+import { getUserOrders } from "@/api/food-delivery.api";
+
+// BE trả về Order có shape khác mock-data, chuẩn hoá về một kiểu hiển thị chung
+type DisplayOrder = {
+  id: string;
+  restaurantName: string;
+  items: { name: string; qty: number; price: number }[];
+  total: number;
+  status: OrderStatus;
+  placedAt: string;
+};
 
 export const Route = createFileRoute("/orders")({
   head: () => ({ meta: [{ title: "Đơn hàng — Bếp Nhà" }] }),
@@ -27,14 +39,116 @@ const tabs = [
   { id: "cancelled", label: "Đã hủy" },
 ];
 
+// Map status BE → status hiển thị (BE dùng 'pending', FE dùng 'placed')
+function mapBeStatus(beStatus: string): OrderStatus {
+  if (beStatus === "pending") return "placed";
+  return (beStatus as OrderStatus) ?? "placed";
+}
+
+function formatPlacedAt(iso: string): string {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+    });
+  } catch {
+    return iso;
+  }
+}
+
 function OrdersPage() {
   const [tab, setTab] = useState("active");
-  const filtered = orders.filter((o) =>
+  const { isAuthenticated, user } = useAuth();
+
+  const [displayOrders, setDisplayOrders] = useState<DisplayOrder[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!isAuthenticated || !user?.id) {
+        // Chưa login → dùng mock để demo
+        setDisplayOrders(
+          mockOrders.map((o) => ({
+            id: o.id,
+            restaurantName: o.restaurantName,
+            items: o.items,
+            total: o.total,
+            status: o.status,
+            placedAt: o.placedAt,
+          }))
+        );
+        return;
+      }
+      setLoading(true);
+      setFetchError(null);
+      try {
+        const res = await getUserOrders(user.id);
+        const list = res?.data ?? [];
+        if (cancelled) return;
+        if (!Array.isArray(list) || list.length === 0) {
+          // User chưa có order thật → fallback mock
+          setDisplayOrders(
+            mockOrders.map((o) => ({
+              id: o.id,
+              restaurantName: o.restaurantName,
+              items: o.items,
+              total: o.total,
+              status: o.status,
+              placedAt: o.placedAt,
+            }))
+          );
+        } else {
+          setDisplayOrders(
+            list.map((o: any) => ({
+              id: o.orderId,
+              restaurantName: o.restaurantName,
+              items: (o.items ?? []).map((it: any) => ({
+                name: it.name,
+                qty: it.quantity ?? it.qty ?? 1,
+                price: it.price,
+              })),
+              total: o.totalPrice,
+              status: mapBeStatus(o.status),
+              placedAt: formatPlacedAt(o.createdAt),
+            }))
+          );
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          setFetchError(err?.message ?? "Không tải được đơn hàng");
+          // Fallback về mock để UI không trống
+          setDisplayOrders(
+            mockOrders.map((o) => ({
+              id: o.id,
+              restaurantName: o.restaurantName,
+              items: o.items,
+              total: o.total,
+              status: o.status,
+              placedAt: o.placedAt,
+            }))
+          );
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthenticated, user?.id]);
+
+  const filtered = displayOrders.filter((o) =>
     tab === "active"
       ? !["completed", "cancelled"].includes(o.status)
       : tab === "completed"
         ? o.status === "completed"
-        : o.status === "cancelled",
+        : o.status === "cancelled"
   );
 
   return (
@@ -43,8 +157,19 @@ function OrdersPage() {
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Đơn hàng của tôi</h1>
-          <p className="mt-1 text-muted-foreground">Theo dõi và xem lại các đơn đặt món</p>
+          <p className="mt-1 text-muted-foreground">
+            {isAuthenticated
+              ? `Đang hiển thị đơn của ${user?.name ?? "bạn"} (BE: food_distributed_be)`
+              : "Đăng nhập để xem đơn thật từ hệ thống (đang hiển thị dữ liệu mẫu)."}
+          </p>
         </div>
+
+        {fetchError && (
+          <div className="mb-4 flex items-start gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-800">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>BE chưa sẵn sàng: {fetchError}. Đang hiển thị dữ liệu mẫu.</span>
+          </div>
+        )}
 
         <div className="mb-6 flex gap-2 rounded-full bg-secondary p-1">
           {tabs.map((t) => (
@@ -62,7 +187,12 @@ function OrdersPage() {
           ))}
         </div>
 
-        {filtered.length === 0 ? (
+        {loading ? (
+          <Card className="flex items-center justify-center gap-2 rounded-2xl border-0 p-12 shadow-card">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+            <span className="text-muted-foreground">Đang tải đơn hàng từ BE...</span>
+          </Card>
+        ) : filtered.length === 0 ? (
           <Card className="rounded-2xl border-0 p-12 text-center shadow-card">
             <p className="text-muted-foreground">Chưa có đơn hàng nào trong mục này.</p>
           </Card>
@@ -73,12 +203,9 @@ function OrdersPage() {
               return (
                 <Link key={o.id} to="/orders/$id" params={{ id: o.id }}>
                   <Card className="flex items-center gap-4 rounded-2xl border-0 p-4 shadow-card transition-smooth hover:-translate-y-0.5">
-                    <img
-                      src={o.cover}
-                      alt={o.restaurantName}
-                      loading="lazy"
-                      className="h-20 w-20 shrink-0 rounded-xl object-cover"
-                    />
+                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-primary-glow/30 text-2xl">
+                      🍜
+                    </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <h3 className="font-semibold">{o.restaurantName}</h3>

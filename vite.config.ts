@@ -12,4 +12,15 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Cấu hình Vite bổ sung (proxy /api → BE port 3000)
+  vite: {
+    server: {
+      proxy: {
+        "/api": {
+          target: process.env.VITE_API_BASE_URL || "http://localhost:3000",
+          changeOrigin: true,
+        },
+      },
+    },
+  },
 });

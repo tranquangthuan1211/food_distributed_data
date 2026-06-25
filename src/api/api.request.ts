@@ -1,8 +1,10 @@
-import CookieHelper from "../utils/cookie.helper";
+import { authStorage } from "../utils/auth-storage";
 
-// import CookieHelper from "./cookie-helper";
-const API_HOST = "http://localhost:3000/api";
+// Base URL — Vite proxy "/api" → http://localhost:3000 (xem vite.config.ts).
+// Khi build production, set VITE_API_BASE_URL trong .env để trỏ thẳng BE.
+const API_HOST = "/api";
 
+// --------- Helpers ---------
 export const getFormData = (data: { [name: string]: any }): FormData => {
   const formData = new FormData();
   Object.keys(data).forEach((key) => {
@@ -17,12 +19,11 @@ export const getFormData = (data: { [name: string]: any }): FormData => {
 };
 
 const getRequestHeaders = async (
-  method: string,
+  _method: string,
   isFormData?: boolean
-): Promise<any> => {
-  const token =  CookieHelper.getItem("token");
-  // console.log(token);
+): Promise<Headers> => {
   const headers = new Headers();
+  const token = authStorage.getToken();
   if (token) {
     headers.append("Authorization", "Bearer " + token);
   }
@@ -32,62 +33,62 @@ const getRequestHeaders = async (
   return headers;
 };
 
-// Attach body as search params
-const getRequestUrl = (query: string, body?: any) => {
-  return API_HOST + query + (body ? "?" + new URLSearchParams(body) : "");
+const getRequestUrl = (query: string, body?: Record<string, unknown>) => {
+  return (
+    API_HOST +
+    query +
+    (body && Object.keys(body).length > 0
+      ? "?" + new URLSearchParams(body as any).toString()
+      : "")
+  );
 };
 
 const apiFetch = async (
   input: RequestInfo | URL,
-  init?: RequestInit | undefined
-) => {
+  init?: RequestInit
+): Promise<any> => {
+  let response: Response;
   try {
-    const response = await fetch(input, init);
-    const result = await response.json();
-
-    // Handle specific error messages from our API
-    if (!response.ok) {
-      let errorMessage = `Lỗi ${response.status}`;
-
-      if (result.message) {
-        errorMessage = result.message;
-      } else if (result.error) {
-        errorMessage = result.error;
-      }
-
-      throw new Error(errorMessage);
-    }
-
-    return result;
-  } catch (error) {
-    // Re-throw with custom error handling
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error('Đã có lỗi xảy ra, vui lòng thử lại');
+    response = await fetch(input, init);
+  } catch (networkErr) {
+    throw new Error(
+      "Không kết nối được tới server. Hãy kiểm tra backend đã chạy chưa (port 3000)."
+    );
   }
+
+  // Đọc JSON; nếu rỗng thì bỏ qua
+  let result: any = null;
+  try {
+    result = await response.json();
+  } catch {
+    /* response không có body JSON */
+  }
+
+  if (!response.ok) {
+    let errorMessage = `Lỗi ${response.status}`;
+    if (result?.message) errorMessage = result.message;
+    else if (result?.error) errorMessage = result.error;
+    throw new Error(errorMessage);
+  }
+
+  return result;
 };
 
+// --------- Public methods ---------
 export const apiPost = async (query: string, body: any) => {
   const isFormData = body instanceof FormData;
   const headers = await getRequestHeaders("POST", isFormData);
-  try {
-    return await apiFetch(getRequestUrl(query), {
-      method: "POST",
-      headers,
-      body: isFormData ? body : JSON.stringify(body),
-    });
-  }
-  catch (error: any) {
-    // console.log(error)
-    throw new Error(error.message)
-  }
+  return apiFetch(getRequestUrl(query), {
+    method: "POST",
+    headers,
+    body: isFormData ? body : JSON.stringify(body),
+  });
 };
 
 export const apiDelete = async (query: string, body: any) => {
   const isFormData = body instanceof FormData;
   const headers = await getRequestHeaders("DELETE", isFormData);
-  return await apiFetch(getRequestUrl(query, body), {
+  return apiFetch(getRequestUrl(query, body), {
     method: "DELETE",
     headers,
     body: isFormData ? body : JSON.stringify(body),
@@ -97,7 +98,7 @@ export const apiDelete = async (query: string, body: any) => {
 export const apiPut = async (query: string, body: any) => {
   const isFormData = body instanceof FormData;
   const headers = await getRequestHeaders("PUT", isFormData);
-  return await apiFetch(getRequestUrl(query), {
+  return apiFetch(getRequestUrl(query), {
     method: "PUT",
     headers,
     body: isFormData ? body : JSON.stringify(body),
@@ -107,16 +108,16 @@ export const apiPut = async (query: string, body: any) => {
 export const apiPatch = async (query: string, body: any) => {
   const isFormData = body instanceof FormData;
   const headers = await getRequestHeaders("PATCH", isFormData);
-  return await apiFetch(getRequestUrl(query), {
+  return apiFetch(getRequestUrl(query), {
     method: "PATCH",
     headers,
     body: isFormData ? body : JSON.stringify(body),
   });
 };
 
-export const apiGet = async (query: string, body?: any) => {
+export const apiGet = async (query: string, body?: Record<string, unknown>) => {
   const headers = await getRequestHeaders("GET");
-  return await apiFetch(getRequestUrl(query, body), {
+  return apiFetch(getRequestUrl(query, body), {
     method: "GET",
     headers,
   });
