@@ -1,7 +1,7 @@
 import CookieHelper from "../utils/cookie.helper";
 
 // import CookieHelper from "./cookie-helper";
-const API_HOST = "http://localhost:3001/api/v1";
+const API_HOST = "http://localhost:3000/api";
 
 export const getFormData = (data: { [name: string]: any }): FormData => {
   const formData = new FormData();
@@ -44,13 +44,27 @@ const apiFetch = async (
   try {
     const response = await fetch(input, init);
     const result = await response.json();
+
+    // Handle specific error messages from our API
     if (!response.ok) {
-      const message = `Lỗi: ${result.message || response.status}`;
-      throw new Error(message);
+      let errorMessage = `Lỗi ${response.status}`;
+
+      if (result.message) {
+        errorMessage = result.message;
+      } else if (result.error) {
+        errorMessage = result.error;
+      }
+
+      throw new Error(errorMessage);
     }
+
     return result;
   } catch (error) {
-    throw error;
+    // Re-throw with custom error handling
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Đã có lỗi xảy ra, vui lòng thử lại');
   }
 };
 
