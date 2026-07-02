@@ -115,5 +115,14 @@ export const orders: Order[] = [
   },
 ];
 
+/**
+ * Định dạng số thành chuỗi tiền Việt Nam (VND) với ký tự ₫ ở cuối.
+ *
+ * @param n - Số tiền cần định dạng (đơn vị VND)
+ * @returns Chuỗi đã định dạng theo locale vi-VN, ví dụ `65000` → `"65.000₫"`
+ *
+ * @example
+ * formatVND(65000); // "65.000₫"
+ */
 export const formatVND = (n: number) =>
   n.toLocaleString("vi-VN") + "₫";
