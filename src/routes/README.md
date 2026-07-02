@@ -19,3 +19,7 @@ is `src/routes/__root.tsx`.
 | `__root.tsx` | app shell — wraps every page; preserve `<Outlet />` |
 
 `routeTree.gen.ts` is auto-generated. Don't edit it by hand.
+
+> **Ghi chú tiếng Việt:** File `routeTree.gen.ts` được TanStack Router tự động sinh ra
+> mỗi khi chạy dev/build. Mọi thay đổi thủ công vào file này sẽ bị ghi đè, vì vậy
+> tuyệt đối không sửa trực tiếp.
