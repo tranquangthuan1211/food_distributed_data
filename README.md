@@ -44,3 +44,15 @@ src/
 | `bun preview` | Preview bản build |
 | `bun lint` | Chạy ESLint kiểm tra code |
 | `bun format` | Format code bằng Prettier |
+
+## Công nghệ sử dụng
+
+- **[TanStack Start](https://tanstack.com/start)** — Framework full-stack với file-based routing
+- **[TanStack Router](https://tanstack.com/router)** — Type-safe routing cho React
+- **[TanStack React Query](https://tanstack.com/query)** — Quản lý state server và cache
+- **[Tailwind CSS v4](https://tailwindcss.com/)** — Utility-first CSS framework
+- **[Radix UI](https://www.radix-ui.com/)** — Bộ component nguyên thuỷ, accessible
+- **[Lucide React](https://lucide.dev/)** — Bộ icon SVG
+- **[React Hook Form](https://react-hook-form.com/)** + **[Zod](https://zod.dev/)** — Quản lý form và validation
+- **[Sonner](https://sonner.emilkowal.ski/)** — Toast notification
+- **TypeScript** — Ngôn ngữ chính
