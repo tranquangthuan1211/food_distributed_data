@@ -33,7 +33,7 @@ export type Restaurant = {
 };
 
 export const restaurants: Restaurant[] = [
-  { id: "r1", name: "Phở Hà Nội Cụ Long", cover: rest1, cuisine: "Phở · Bún · Việt Nam", rating: 4.9, reviews: 1280, deliveryTime: "20-25 phút", distance: "1.2 km", fee: "15.000₫", promo: "Giảm 30k", address: "12 Lê Lợi, Q.1, TP.HCM" },
+  { id: "r1", name: "Phở Hà Nội - Cụ Long", cover: rest1, cuisine: "Phở · Bún · Việt Nam", rating: 4.9, reviews: 1280, deliveryTime: "20-25 phút", distance: "1.2 km", fee: "15.000₫", promo: "Giảm 30k", address: "12 Lê Lợi, Q.1, TP.HCM" },
   { id: "r2", name: "Bếp Mộc Hiện Đại", cover: rest2, cuisine: "Cơm văn phòng · Healthy", rating: 4.7, reviews: 890, deliveryTime: "25-30 phút", distance: "2.4 km", fee: "20.000₫", promo: "Freeship", address: "45 Nguyễn Huệ, Q.1" },
   { id: "r3", name: "Quán Nướng Cô Ba", cover: rest3, cuisine: "Nướng · Đồ ăn vặt", rating: 4.8, reviews: 2105, deliveryTime: "15-20 phút", distance: "0.8 km", fee: "12.000₫", address: "78 Phạm Ngũ Lão, Q.1" },
   { id: "r4", name: "TocoToco Trà Sữa", cover: rest4, cuisine: "Trà sữa · Tráng miệng", rating: 4.6, reviews: 3420, deliveryTime: "15-20 phút", distance: "1.5 km", fee: "10.000₫", promo: "Mua 1 tặng 1", address: "200 Võ Văn Tần, Q.3" },
@@ -70,7 +70,7 @@ export const orders: Order[] = [
   {
     id: "BN240615001",
     restaurantId: "r1",
-    restaurantName: "Phở Hà Nội Cụ Long",
+    restaurantName: "Phở Hà Nội - Cụ Long",
     cover: rest1,
     items: [
       { name: "Phở bò tái nạm", qty: 2, price: 65000 },
