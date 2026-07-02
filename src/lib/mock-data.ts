@@ -48,6 +48,7 @@ export const dishes: Dish[] = [
   { id: "d6", name: "Cơm tấm sườn bì chả", desc: "Sườn nướng, trứng ốp la, bì chả", price: 55000, img: comtamImg, category: "Cơm", rating: 4.9, hot: true },
   { id: "d7", name: "Cơm gà xối mỡ", desc: "Da gà giòn rụm, cơm thơm", price: 50000, img: comtamImg, category: "Cơm", rating: 4.7 },
   { id: "d8", name: "Phở xào bò", desc: "Phở áp chảo cùng bò xào rau", price: 70000, img: phoImg, category: "Phở & Bún", rating: 4.5 },
+  { id: "d9", name: "Bún bò Huế", desc: "Nước dùng cay nồng đậm đà chuẩn vị Huế", price: 60000, img: phoImg, category: "Phở & Bún", rating: 4.7 },
 ];
 
 export type OrderStatus = "placed" | "confirmed" | "preparing" | "delivering" | "completed" | "cancelled";
