@@ -5,6 +5,6 @@ export interface Dish {
     price: number;
     img: string;
     category: string;
-    rating: number;
+    rating?: number;
     hot?: boolean;
 }
