@@ -20,7 +20,7 @@ export type SignUpResponse = Promise<{
     accessToken: string;
   }>;
 export interface User {
-    _id: string;
+    _id?: string;
     id: string;
     id_doctor: string;
     id_manager: string;
