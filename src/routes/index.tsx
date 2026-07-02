@@ -16,9 +16,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Bếp Nhà — Đặt món ngon giao tận nơi" },
-      { name: "description", content: "Đặt món ăn Việt yêu thích, giao tận nơi trong 30 phút. Phở, bánh mì, cơm tấm và hàng trăm món ngon." },
+      { name: "description", content: "Đặt món ăn Việt yêu thích, giao tận nơi trong 25 phút. Phở, bánh mì, cơm tấm và hàng trăm món ngon." },
       { property: "og:title", content: "Bếp Nhà — Đặt món ngon giao tận nơi" },
-      { property: "og:description", content: "Đặt món ăn Việt yêu thích, giao tận nơi trong 30 phút." },
+      { property: "og:description", content: "Đặt món ăn Việt yêu thích, giao tận nơi trong 25 phút." },
     ],
   }),
   component: Index,
@@ -55,7 +55,7 @@ function Index() {
                 </span>
               </h1>
               <p className="max-w-lg text-lg text-muted-foreground">
-                Hàng trăm món ăn Việt yêu thích từ các bếp uy tín. Đặt nhanh, giao trong 30 phút, nóng hổi như vừa ra lò.
+                Hàng trăm món ăn Việt yêu thích từ các bếp uy tín. Đặt nhanh, giao trong 25 phút, nóng hổi như vừa ra lò.
               </p>
 
               <div className="flex flex-col gap-3 rounded-2xl bg-card p-3 shadow-card sm:flex-row">
@@ -75,7 +75,7 @@ function Index() {
 
               <div className="flex flex-wrap gap-6 pt-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-primary" /> Giao trong 30 phút
+                  <Clock className="h-4 w-4 text-primary" /> Giao trong 25 phút
                 </div>
                 <div className="flex items-center gap-2">
                   <Star className="h-4 w-4 text-primary" /> 4.9/5 từ 12k khách
