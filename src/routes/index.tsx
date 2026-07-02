@@ -46,7 +46,7 @@ function Index() {
             <div className="space-y-6">
               <Badge variant="secondary" className="rounded-full px-4 py-1.5 text-sm">
                 <Flame className="mr-1.5 h-3.5 w-3.5 text-primary" />
-                Ưu đãi giao hàng miễn phí hôm nay
+                Freeship hôm nay — đặt nhanh kẻo lỡ
               </Badge>
               <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
                 Món ngon mỗi ngày,{" "}
