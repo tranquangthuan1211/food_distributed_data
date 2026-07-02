@@ -56,7 +56,7 @@ export function Menu({
                 <div className="mb-6 flex items-end justify-between">
                 <div>
                     <h2 className="text-2xl font-bold sm:text-3xl">Món nổi bật</h2>
-                    <p className="mt-1 text-muted-foreground">Được khách yêu thích nhất tuần này</p>
+                    <p className="mt-1 text-muted-foreground">Được yêu thích nhất tuần này</p>
                 </div>
                 <Link to="/restaurants">
                     <Button variant="ghost" className="text-primary hover:text-primary">
