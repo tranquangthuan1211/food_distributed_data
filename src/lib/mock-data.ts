@@ -116,6 +116,22 @@ export const orders: Order[] = [
     address: "227 Nguyễn Văn Cừ, Q.5, TP.HCM",
     payment: "Ví ZaloPay",
   },
+  {
+    id: "BN240701014",
+    restaurantId: "r2",
+    restaurantName: "Bếp Mộc Hiện Đại",
+    cover: rest2,
+    items: [
+      { name: "Cơm gà xối mỡ", qty: 1, price: 50000 },
+      { name: "Gỏi cuốn tôm thịt", qty: 1, price: 45000 },
+    ],
+    total: 95000,
+    status: "preparing",
+    placedAt: "Hôm nay, 13:10",
+    eta: "13:40",
+    address: "227 Nguyễn Văn Cừ, Q.5, TP.HCM",
+    payment: "Thẻ tín dụng",
+  },
 ];
 
 /**
