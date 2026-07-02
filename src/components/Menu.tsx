@@ -15,7 +15,7 @@ export function Menu({
     categories: Category[];
     dishes: Dish[];
 }) {
-    const [stateCategory, setStateCategory] = useState<Category>(categories[0]);
+    const [stateCategory, setStateCategory] = useState<Category | null>(null);
     const [stateDishes, setDishes] = useState<Dish[]>(dishes);
     const handleClickCategory = (category: Category) => {
         // Cập nhật category đang chọn và lọc danh sách món theo category đó.
@@ -40,7 +40,7 @@ export function Menu({
                     onClick={() => handleClickCategory(c)}
                     key={c.name}
                     className={`flex shrink-0 items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium transition-smooth ${
-                        stateCategory.name === c.name
+                        stateCategory?.name === c.name
                         ? "border-primary bg-primary text-primary-foreground shadow-soft"
                         : "border-border bg-card hover:border-primary hover:text-primary"
                     }`}
