@@ -16,3 +16,20 @@ bun dev
 ```
 
 Sau đó mở `http://localhost:3000` để xem ứng dụng.
+
+## Cấu trúc thư mục
+
+```
+src/
+├── api/         # Các hàm gọi API (request, user)
+├── assets/      # Hình ảnh tĩnh (món ăn, nhà hàng, hero)
+├── components/  # Component dùng chung (Header, Menu, UI kit)
+├── hooks/       # Custom React hooks
+├── lib/         # Hàm tiện ích, dữ liệu mock, cấu hình server
+├── routes/      # File-based routing của TanStack Start
+├── types/       # Định nghĩa TypeScript types
+├── utils/       # Hàm tiện ích nhỏ (cookie, helper)
+├── router.tsx   # Khởi tạo router
+├── server.ts    # Server entry point
+└── start.ts     # Start script
+```
