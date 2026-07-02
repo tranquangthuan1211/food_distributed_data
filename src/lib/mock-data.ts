@@ -49,6 +49,7 @@ export const dishes: Dish[] = [
   { id: "d7", name: "Cơm gà xối mỡ", desc: "Da gà giòn rụm, cơm thơm", price: 50000, img: comtamImg, category: "Cơm", rating: 4.7 },
   { id: "d8", name: "Phở xào bò", desc: "Phở áp chảo cùng bò xào rau", price: 70000, img: phoImg, category: "Phở & Bún", rating: 4.5 },
   { id: "d9", name: "Bún bò Huế", desc: "Nước dùng cay nồng đậm đà chuẩn vị Huế", price: 60000, img: phoImg, category: "Phở & Bún", rating: 4.7 },
+  { id: "d10", name: "Bún chả Hà Nội", desc: "Thịt nướng thơm lừng, nước chấm chua ngọt", price: 55000, img: phoImg, category: "Phở & Bún", rating: 4.8, hot: true },
 ];
 
 export type OrderStatus = "placed" | "confirmed" | "preparing" | "delivering" | "completed" | "cancelled";
