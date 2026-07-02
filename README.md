@@ -33,3 +33,14 @@ src/
 ├── server.ts    # Server entry point
 └── start.ts     # Start script
 ```
+
+## Scripts
+
+| Lệnh | Mô tả |
+| --- | --- |
+| `bun dev` | Chạy server dev (Vite) |
+| `bun build` | Build production |
+| `bun build:dev` | Build ở chế độ development |
+| `bun preview` | Preview bản build |
+| `bun lint` | Chạy ESLint kiểm tra code |
+| `bun format` | Format code bằng Prettier |
