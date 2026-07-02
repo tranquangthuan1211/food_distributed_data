@@ -37,6 +37,7 @@ export const restaurants: Restaurant[] = [
   { id: "r2", name: "Bếp Mộc Hiện Đại", cover: rest2, cuisine: "Cơm văn phòng · Healthy", rating: 4.7, reviews: 890, deliveryTime: "25-30 phút", distance: "2.4 km", fee: "20.000₫", promo: "Freeship", address: "45 Nguyễn Huệ, Q.1" },
   { id: "r3", name: "Quán Nướng Cô Ba", cover: rest3, cuisine: "Nướng · Đồ ăn vặt", rating: 4.8, reviews: 2105, deliveryTime: "15-20 phút", distance: "0.8 km", fee: "12.000₫", address: "78 Phạm Ngũ Lão, Q.1" },
   { id: "r4", name: "TocoToco Trà Sữa", cover: rest4, cuisine: "Trà sữa · Tráng miệng", rating: 4.6, reviews: 3420, deliveryTime: "15-20 phút", distance: "1.5 km", fee: "10.000₫", promo: "Mua 1 tặng 1", address: "200 Võ Văn Tần, Q.3" },
+  { id: "r5", name: "Bún Bò Huế O Phượng", cover: rest2, cuisine: "Bún bò · Huế", rating: 4.7, reviews: 1560, deliveryTime: "25-30 phút", distance: "2.0 km", fee: "18.000₫", promo: "Freeship đơn từ 100k", address: "88 Trần Hưng Đạo, Q.5" },
 ];
 
 export const dishes: Dish[] = [
