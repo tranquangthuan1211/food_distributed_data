@@ -32,6 +32,7 @@ const categories: Category[] = [
   { name: "Khai vị", icon: "🥢" },
   { name: "Đồ uống", icon: "🥤" },
   { name: "Tráng miệng", icon: "🍰" },
+  { name: "Lẩu", icon: "🍲" },
 ];
 
 function Index() {
