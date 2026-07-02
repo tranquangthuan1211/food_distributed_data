@@ -1,15 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, Star, Flame, Plus } from "lucide-react";
+
 import heroImg from "@/assets/hero-food.jpg";
 import { AppHeader } from "@/components/AppHeader";
+import { Menu } from "@/components/Menu";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { dishes, formatVND } from "@/lib/mock-data";
-import {Menu} from "@/components/Menu";
-import { Dish } from "@/types/dishes";
 import { Category } from "@/types/categories";
+import { Dish } from "@/types/dishes";
 
 export const Route = createFileRoute("/")({
   head: () => ({
