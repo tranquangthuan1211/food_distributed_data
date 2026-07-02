@@ -33,11 +33,11 @@ export function AppHeader() {
               <Receipt className="mr-1.5 h-4 w-4" /> Đơn hàng
             </Button>
           </Link>
-          {/* <Link to="/admin" className="hidden md:inline-flex">
+          <Link to="/admin" className="hidden md:inline-flex">
             <Button variant="ghost" size="sm" className="rounded-full">
               <LayoutDashboard className="mr-1.5 h-4 w-4" /> Quản trị
             </Button>
-          </Link> */}
+          </Link>
           <Link to="/cart">
             <Button variant="ghost" size="icon" className="rounded-full relative">
               <ShoppingBag className="h-5 w-5" />
