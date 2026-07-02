@@ -18,6 +18,8 @@ export function Menu({
     const [stateCategory, setStateCategory] = useState<Category>(categories[0]);
     const [stateDishes, setDishes] = useState<Dish[]>(dishes);
     const handleClickCategory = (category: Category) => {
+        // Cập nhật category đang chọn và lọc danh sách món theo category đó.
+        // Nếu chọn "Tất cả" thì hiển thị toàn bộ danh sách món.
         setStateCategory(category);
         if (category.name === "Tất cả") {
             setDishes(dishes);
